@@ -25,7 +25,7 @@ class GA:
         k: int = None,
         crossover_rate: float = None,
         mutation_rate: float = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         基因演算法 (Genetic Algorithm, GA)
@@ -58,7 +58,7 @@ class GA:
 
     def __getstate__(self):
         self_dict = self.__dict__.copy()
-        del self_dict['pool']
+        del self_dict["pool"]
         return self_dict
 
     def __setstate__(self, state):
@@ -76,7 +76,7 @@ class GA:
         載入歷史紀錄
         """
         folder = self.folder or "results"
-        with open(f'{folder}/history.json', 'r', encoding='utf-8') as f:
+        with open(f"{folder}/history.json", "r", encoding="utf-8") as f:
             self._history = json.load(f)
 
     def output_result(self):
@@ -88,24 +88,24 @@ class GA:
         shutil.rmtree(folder, ignore_errors=True)
         os.makedirs(folder, exist_ok=True)
 
-        with open(f'{folder}/history.json', 'w', encoding='utf-8') as f:
+        with open(f"{folder}/history.json", "w", encoding="utf-8") as f:
             json.dump(self._history, f, ensure_ascii=False, cls=AdvancedJSONEncoder, indent=2)
 
         summary = defaultdict(list)
 
         for d in self._history:
-            for k, v in d['summary'].items():
+            for k, v in d["summary"].items():
                 summary[k].append(v)
 
-        plot_summary(f'{folder}/summary.png', summary)
+        plot_summary(f"{folder}/summary.png", summary)
 
         args = [
-            (f"{folder}/{h['generation']:03d}.png", h['generation'], h['best_now'], h['best_all'])
+            (f"{folder}/{h['generation']:03d}.png", h["generation"], h["best_now"], h["best_all"])
             for h in self._history
         ]
 
         with mp.Pool(self._pool_size) as pool:
-            pool.starmap(plot_route, tqdm(args, desc='畫圖中'))
+            pool.starmap(plot_route, tqdm(args, desc="畫圖中"))
 
     def run(self) -> None:
         """
@@ -118,7 +118,7 @@ class GA:
 
         with mp.Pool(self._pool_size) as pool:
             self.pool = pool
-            for gen in tqdm(range(self._generations), desc='演化進度'):  # 世代數
+            for gen in tqdm(range(self._generations), desc="演化進度"):  # 世代數
                 # 演化 (好像在初始化時就已經做了)
 
                 # 紀錄結果
@@ -128,20 +128,22 @@ class GA:
 
                 result = np.array([i.distance for i in self._individuals])
 
-                self._history.append({
-                    'generation': gen,
-                    "best_now": self._best_now,
-                    "best_all": self.best,
-                    "summary": {
-                        "mean": np.mean(result),
-                        "std": np.std(result),
-                        "min": np.min(result),
-                        "q1": np.percentile(result, 25),
-                        "median": np.median(result),
-                        "q3": np.percentile(result, 75),
-                        "max": np.max(result),
-                    },
-                })
+                self._history.append(
+                    {
+                        "generation": gen,
+                        "best_now": self._best_now,
+                        "best_all": self.best,
+                        "summary": {
+                            "mean": np.mean(result),
+                            "std": np.std(result),
+                            "min": np.min(result),
+                            "q1": np.percentile(result, 25),
+                            "median": np.median(result),
+                            "q3": np.percentile(result, 75),
+                            "max": np.max(result),
+                        },
+                    }
+                )
 
                 del result
 
@@ -159,7 +161,7 @@ class GA:
         交配
         """
         # 預處理可以交配的基因
-        idvs = sorted(self._individuals)[:int(self._population * self._crossover_rate)]
+        idvs = sorted(self._individuals)[: int(self._population * self._crossover_rate)]
         self._individuals.clear()  # 殺死上一代
 
         # print(idvs)
@@ -172,6 +174,6 @@ class GA:
         crossover = partial(Route.crossover, k=self._k, mutation_rate=self._mutation_rate)
 
         fs = [(idvs[f[0]], idvs[f[1]]) for f in rand.choice(idxs, (self._population, 2), p=p)]
-        fs = tqdm(fs, desc='繁衍中', leave=False, position=1)
+        fs = tqdm(fs, desc="繁衍中", leave=False, position=1)
 
         self._individuals = self.pool.starmap(crossover, fs)

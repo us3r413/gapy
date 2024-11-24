@@ -59,7 +59,7 @@ class Location(object):
         與另一個地點之間的距離
         """
         dx, dy = self.x - other.x, self.y - other.y
-        return np.sqrt(dx ** 2 + dy ** 2)
+        return np.sqrt(dx**2 + dy**2)
 
     @property
     def x(self) -> double:
@@ -93,13 +93,10 @@ class Route(object):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f'<Route distance={self._distance}>'
+        return f"<Route distance={self._distance}>"
 
     def __json__(self):
-        return {
-            'path': self._path,
-            'distance': self._distance
-        }
+        return {"path": self._path, "distance": self._distance}
 
     def __getitem__(self, key: int) -> Location:
         return self._path[key]

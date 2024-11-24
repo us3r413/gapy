@@ -21,20 +21,20 @@ def plot_init(config) -> None:
     初始化設定
     """
     # 加入字型
-    font = fm.FontEntry(fname=config['font']['path'], name=config['font']['name'])
+    font = fm.FontEntry(fname=config["font"]["path"], name=config["font"]["name"])
     fm.fontManager.ttflist.append(font)
 
     # 設定圖片參數
-    mpl.rcParams.update(**config['rcParams'])
-    mpl.rcParams['font.family'] = font.name
+    mpl.rcParams.update(**config["rcParams"])
+    mpl.rcParams["font.family"] = font.name
 
-    del config['rcParams'], config['font']
+    del config["rcParams"], config["font"]
 
     globals().update(config)
 
 
 def plot_route(filename: str, generation: int, route: Route, best: Route = None) -> None:
-    fig = plt.figure(figsize=figsize['route'])
+    fig = plt.figure(figsize=figsize["route"])
     ax = fig.subplots()
 
     # 取得所有座標的 x, y
@@ -87,15 +87,15 @@ def plot_route(filename: str, generation: int, route: Route, best: Route = None)
 
 
 def plot_summary(filename: str, summary: dict) -> None:
-    mean = np.array(summary['mean'])
-    std = np.array(summary['std'])
-    min_ = np.array(summary['min'])
-    q1 = np.array(summary['q1'])
-    median = np.array(summary['median'])
-    q3 = np.array(summary['q3'])
-    max_ = np.array(summary['max'])
+    mean = np.array(summary["mean"])
+    std = np.array(summary["std"])
+    min_ = np.array(summary["min"])
+    q1 = np.array(summary["q1"])
+    median = np.array(summary["median"])
+    q3 = np.array(summary["q3"])
+    max_ = np.array(summary["max"])
 
-    fig = plt.figure(figsize=figsize['summary'])
+    fig = plt.figure(figsize=figsize["summary"])
     ax = fig.subplots()
 
     fig.subplots_adjust(left=0.05, right=0.98, top=0.9, bottom=0.1)
@@ -105,7 +105,6 @@ def plot_summary(filename: str, summary: dict) -> None:
     ax.set_xlabel("世代數")
     ax.set_ylabel("距離")
     max_x, min_y, max_y = len(mean), np.min(min_) * 0.95, np.max(max_) * 1.1
-    print(max_x)
     best_x = np.argmin(min_)
     best_y = min_[best_x]
     ax.set_xlim(0, max_x - 1)
@@ -119,14 +118,18 @@ def plot_summary(filename: str, summary: dict) -> None:
     ax.grid()
 
     # 畫出演化過程
-    ax.plot(mean, label='mean')
-    ax.plot(min_, label='min')
-    ax.plot(max_, label='max')
-    plt.fill_between(range(len(mean)), mean - std, mean + std, alpha=0.5, label='std')
+    ax.plot(mean, label="mean")
+    ax.plot(min_, label="min")
+    ax.plot(max_, label="max")
+    plt.fill_between(range(len(mean)), mean - std, mean + std, alpha=0.5, label="std")
 
-    ax.plot(best_x, best_y, 'o')
-    ax.annotate(f'最佳解: {best_y:.4f} 在第 {best_x} 代', (best_x, best_y),
-                (best_x + 1, best_y - 0.1), arrowprops=dict(arrowstyle='->'))
+    ax.plot(best_x, best_y, "o")
+    ax.annotate(
+        f"最佳解: {best_y:.4f} 在第 {best_x} 代",
+        (best_x, best_y),
+        (best_x + 1, best_y - 0.1),
+        arrowprops=dict(arrowstyle="->"),
+    )
 
     ax.legend()
     fig.savefig(filename)  # 儲存圖片
