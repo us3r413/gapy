@@ -6,10 +6,7 @@ import os
 
 import yaml
 
-from display import plot_init
-from ga import GA
-from location import Location
-from utility import rand
+from ga import GA, Location, plot_init, rand
 
 # 載入設定檔
 with open("config.yaml", "r", encoding='utf-8') as f:

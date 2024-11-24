@@ -6,30 +6,40 @@ data:
     # true: 從檔案讀取資料
     # false: 產生隨機資料
     from_file: false
-    file: # 檔案路徑
+    # 檔案路徑
+    file:
         path: "data/medium.csv"
-        format: "csv"
-    random: # 隨機資料的設定
+        format: csv
+    # 隨機資料的設定
+    random:
         size: 30 # 城市數量
         min: 0 # 最小值
         max: 1 # 最大值
 
 # 遺傳演算法的參數
 ga:
-    generations: 500 # 要演化幾代
-    population: # 群體的大小
+    # 要演化幾代
+    generations: 20
+    # 群體的大小
+    population:
         # 設定群體大小的方式
         # value: 固定值，直接設定群體大小
         # ratio: 比率，人口數為 city_size * ratio
-        mode: "ratio"
-        value: 100
-    k: 4 # 基因要切成幾段
-    crossover_rate: 0.8 # 表現最好的前幾名才能夠交配，0 ~ 1 之間的值
-    mutation_rate: 0.1 # 基因突變率，0 ~ 1 之間的值
+        mode: value
+        value: 5000
+    # 基因要切成幾段
+    k: 4
+    # 表現最好的前幾名才能夠交配，0 ~ 1 之間的值
+    crossover_rate: 0.8
+    # 基因突變率，0 ~ 1 之間的值
+    mutation_rate: 0.1
+    # 結果的資料夾
+    folder: results
 
 # 繪圖的設定
 plot:
-    font: # 字型設定
+    # 字型設定
+    font:
         # 字型名稱
         name: "Noto Sans TC"
         # 字型檔案路徑
@@ -49,10 +59,12 @@ plot:
         lines.markeredgewidth: 0
         lines.markerfacecolor: k
         lines.markersize: 12
-    now_path_style: # 當代最佳路徑的樣式
+    # 當代最佳路徑的樣式
+    now_path_style:
         color: "#d62728"
         marker: "o"
-    best_path_style: # 歷史最佳路徑的樣式
+    # 歷史最佳路徑的樣式
+    best_path_style:
         color: "#1f77b4"
         alpha: 0.8
         marker: "o"

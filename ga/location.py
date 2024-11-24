@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from collections import namedtuple
 from functools import lru_cache
 from itertools import chain
-from typing import TypeAlias
 
 import numpy as np
 from numpy import double
 from numpy.typing import ArrayLike, NDArray
 
-from utility import Coord, rand
+from .utility import rand
+
+# 座標
+Coord = namedtuple("Coord", ["x", "y"], defaults=(double(0), double(0)))
 
 
 class Location(object):

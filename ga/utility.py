@@ -1,8 +1,6 @@
-from collections import namedtuple
 from hashlib import sha256
 from json import JSONEncoder
 from sys import version
-from typing import TypeAlias
 
 import numpy as np
 from numpy import double
@@ -13,10 +11,6 @@ seed = sha256(version.encode()).digest()
 seed = int.from_bytes(seed, 'big')
 mt = MT19937(seed)
 rand = Generator(mt)
-
-
-# 座標
-Coord = namedtuple("Coord", ["x", "y"], defaults=(double(0), double(0)))
 
 
 class AdvancedJSONEncoder(JSONEncoder):

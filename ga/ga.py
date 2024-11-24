@@ -3,16 +3,15 @@ import multiprocessing as mp
 import os
 import shutil
 from collections import defaultdict
-from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 
 import numpy as np
 from numpy import double
 from tqdm import tqdm
 
-from display import plot_route, plot_summary
-from location import Location, Route
-from utility import AdvancedJSONEncoder, rand
+from .display import plot_route, plot_summary
+from .location import Location, Route
+from .utility import AdvancedJSONEncoder, rand
 
 bits = np.array([1, 2, 4, 8, 16, 32, 64, 128], dtype=np.uint8)
 
@@ -25,7 +24,8 @@ class GA:
         population: int = None,
         k: int = None,
         crossover_rate: float = None,
-        mutation_rate: float = None
+        mutation_rate: float = None,
+        **kwargs
     ) -> None:
         """
         基因演算法 (Genetic Algorithm, GA)
@@ -44,6 +44,9 @@ class GA:
         self._k = min(k or 2, len(locations))  # 每段基因至少有一個城市
         self._crossover_rate = crossover_rate or 0.8
         self._mutation_rate = mutation_rate or 0.1
+
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
         self._pool_size = mp.cpu_count()  # 使用 CPU 核心數量
 
@@ -68,28 +71,36 @@ class GA:
         """
         return self._history
 
+    def load_history(self) -> None:
+        """
+        載入歷史紀錄
+        """
+        folder = self.folder or "results"
+        with open(f'{folder}/history.json', 'r', encoding='utf-8') as f:
+            self._history = json.load(f)
+
     def output_result(self):
         """
         輸出結果
         """
         # 刪除舊的圖片
-        FOLDER = "results"
-        shutil.rmtree(FOLDER, ignore_errors=True)
-        os.makedirs(FOLDER, exist_ok=True)
+        folder = self.folder or "results"
+        shutil.rmtree(folder, ignore_errors=True)
+        os.makedirs(folder, exist_ok=True)
 
-        with open(f'{FOLDER}/history.json', 'w', encoding='utf-8') as f:
+        with open(f'{folder}/history.json', 'w', encoding='utf-8') as f:
             json.dump(self._history, f, ensure_ascii=False, cls=AdvancedJSONEncoder, indent=2)
 
-        summary = defaultdict(list.copy)
+        summary = defaultdict(list)
 
         for d in self._history:
             for k, v in d['summary'].items():
                 summary[k].append(v)
 
-        plot_summary('results/summary.png', summary)
+        plot_summary(f'{folder}/summary.png', summary)
 
         args = [
-            (f"{FOLDER}/{h['generation']:03d}.png", h['generation'], h['best_now'], h['best_all'])
+            (f"{folder}/{h['generation']:03d}.png", h['generation'], h['best_now'], h['best_all'])
             for h in self._history
         ]
 
