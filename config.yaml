@@ -1,0 +1,61 @@
+# Description: 遺傳演算法的設定檔
+
+# 資料來源
+data:
+    # 是否從檔案讀取資料
+    # true: 從檔案讀取資料
+    # false: 產生隨機資料
+    from_file: false
+    file: # 檔案路徑
+        path: "data/medium.csv"
+        format: "csv"
+    random: # 隨機資料的設定
+        size: 30 # 城市數量
+        min: 0 # 最小值
+        max: 1 # 最大值
+
+# 遺傳演算法的參數
+ga:
+    generations: 500 # 要演化幾代
+    population: # 群體的大小
+        # 設定群體大小的方式
+        # value: 固定值，直接設定群體大小
+        # ratio: 比率，人口數為 city_size * ratio
+        mode: "ratio"
+        value: 100
+    k: 4 # 基因要切成幾段
+    crossover_rate: 0.8 # 表現最好的前幾名才能夠交配，0 ~ 1 之間的值
+    mutation_rate: 0.1 # 基因突變率，0 ~ 1 之間的值
+
+# 繪圖的設定
+plot:
+    font: # 字型設定
+        # 字型名稱
+        name: "Noto Sans TC"
+        # 字型檔案路徑
+        path: ".fonts/Noto_Sans_TC/NotoSansTC-Regular.ttf"
+        # .fonts/Noto_Serif_TC/NotoSerifTC-Regular.ttf
+    rcParams:
+        axes.titlepad: 18
+        axes.titlesize: xx-large
+        axes.labelpad: 6
+        axes.labelsize: large
+        figure.dpi: 200
+        figure.figsize: [10, 10]
+        font.size: 18
+        legend.fontsize: small
+        lines.linestyle: "-"
+        lines.linewidth: 4
+        lines.markeredgewidth: 0
+        lines.markerfacecolor: k
+        lines.markersize: 12
+    now_path_style: # 當代最佳路徑的樣式
+        color: "#d62728"
+        marker: "o"
+    best_path_style: # 歷史最佳路徑的樣式
+        color: "#1f77b4"
+        alpha: 0.8
+        marker: "o"
+    figsize:
+        route: [10, 10] # 路徑圖的大小
+        summary: [24, 10] # 摘要圖的大小
