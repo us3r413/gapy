@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 from numpy import double
 from tqdm import tqdm
-
+#tqdm is progress bar
 from .display import plot_route, plot_summary
 from .location import Location, Route
 from .utility import AdvancedJSONEncoder, rand
@@ -118,7 +118,7 @@ class GA:
 
         with mp.Pool(self._pool_size) as pool:
             self.pool = pool
-            for gen in tqdm(range(self._generations), desc="演化進度"):  # 世代數
+            for gen in tqdm(range(self._generations), desc="演化進度"):  # 世代數 tqdm is progress bar
                 # 演化 (好像在初始化時就已經做了)
 
                 # 紀錄結果
@@ -144,9 +144,9 @@ class GA:
                         },
                     }
                 )
-
+                #update the history log
                 del result
-
+                #delete result to free up memory space
                 # 最後一代不用交配
                 if gen == self._generations - 1:
                     continue
@@ -163,7 +163,7 @@ class GA:
         # 預處理可以交配的基因
         idvs = sorted(self._individuals)[: int(self._population * self._crossover_rate)]
         self._individuals.clear()  # 殺死上一代
-
+        
         # print(idvs)
         dis = np.array([i.distance for i in idvs])
         idxs = np.arange(len(idvs))
